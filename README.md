@@ -35,7 +35,7 @@ $ python sample.py
 
 ## Acknowledgements
 
-This project makes use of code from the [nanoGPT](https://github.com/karpathy/nanoGPT) by [karpathy]. Specifically, we adapted the implementation of [specific functionality] to enhance our application. We appreciate the efforts of the original authors and recommend checking out their work for its robust features and excellent documentation.
+This project makes use of code from the [nanoGPT](https://github.com/karpathy/nanoGPT) by [karpathy]. Specifically, we adapted the implementation of GPT model to enhance our application. We appreciate the efforts of the original authors and recommend checking out their work for its robust features and excellent documentation.
 
 ## License
 
