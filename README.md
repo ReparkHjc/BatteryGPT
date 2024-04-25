@@ -1,5 +1,4 @@
 ## install
-[train_gpt2.py](config%2Ftrain_gpt2.py)
 Dependencies:
 
 - [pytorch](https://pytorch.org) <3
