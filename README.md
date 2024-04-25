@@ -1,4 +1,4 @@
-## install
+## Install
 Dependencies:
 
 - [pytorch](https://pytorch.org) <3
