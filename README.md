@@ -15,3 +15,20 @@ This project requires a specific dataset to function properly. Please download t
 [Download Dataset](https://drive.google.com/drive/folders/111cncohSHP6_y6Gucg7Prpxfpr4U8DvU?usp=sharing)
 
 Ensure that you have downloaded the entire dataset and place the data files in the correct folder as specified in the project instructions.
+
+## Quick Start
+
+Follow these steps to quickly start using the pre-trained `BatteryGPT` model to predict battery status with the provided Python script:
+
+1. Ensure that you have downloaded and properly set up the dataset as described in the [Dataset section](#dataset).
+
+2. Clone the repository to your local machine:
+
+3. Navigate to the repository directory:
+
+4. Install any necessary dependencies:
+
+5. Run the script to load the pre-trained `BatteryGPT` model and get battery status predictions:
+```
+$ python sample.py
+```
