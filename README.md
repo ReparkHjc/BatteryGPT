@@ -9,12 +9,12 @@ Dependencies:
 - `pip install wandb` for optional logging <3
 - `pip install tqdm`
 
-## Dataset
-This project requires a specific dataset to function properly. Please download the dataset from the following link and save it to a local folder:
+## Dataset and Pretrain Model
+This project runs with a specific dataset and a series of pretrained models to function properly. Please download the dataset and models from the following link and save it to a local folder:
 
-[Download Dataset](https://drive.google.com/drive/folders/111cncohSHP6_y6Gucg7Prpxfpr4U8DvU?usp=sharing)
+[Download Dataset and pretrained model](https://drive.google.com/drive/folders/111cncohSHP6_y6Gucg7Prpxfpr4U8DvU?usp=sharing)
 
-Ensure that you have downloaded the entire dataset and place the data files in the correct folder as specified in the project instructions.
+Ensure that you have downloaded the entire dataset and models and place the data files in the correct folder as specified in the project instructions.
 
 ## Quick Start
 
