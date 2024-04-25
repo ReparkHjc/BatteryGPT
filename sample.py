@@ -6,7 +6,9 @@ import pickle
 from contextlib import nullcontext
 import torch
 import tiktoken
+import tiktoken
 from model import GPTConfig, GPT
+from data.battery.batteryData import loadDataFile
 
 # -----------------------------------------------------------------------------
 init_from = 'resume'  # either 'resume' (from an out_dir) or a gpt2 variant (e.g. 'gpt2-xl')
@@ -14,6 +16,7 @@ init_from = 'resume'  # either 'resume' (from an out_dir) or a gpt2 variant (e.g
 # out_dir = 'out-battery'  # ignored if init_from is not 'resume'
 # out_dir = 'out-battery-v1'  # ignored if init_from is not 'resume'
 out_dir = 'out-battery-46'  # ignored if init_from is not 'resume'
+# out_dir = 'out-battery-all'  # ignored if init_from is not 'resume'
 # start = "\n"  # or "<|endoftext|>" or etc. Can also specify a file, use as: "FILE:prompt.txt"
 # start = [892, 112, 117, 126, 680, 790, 591, 12, 219, 437, 872, 66, 956, 868, 129, 217, 578, 671, 759, 887, 591, 783,
 #          109, 974, 499, 61, 553, 473, 614, 453, 125, 672, 823, 582, 914, 618, 790, 1008, 778, 253, 12, 256, 977, 297,
@@ -55,13 +58,20 @@ out_dir = 'out-battery-46'  # ignored if init_from is not 'resume'
 #          669, 617, 514, 915, 382, 433, 749, 250, 250, 250, 250, 325, 698, 941, 551, 607, 363, 595, 961, 518, 433, 556,
 #          556, 556, 688, 556, 325]
 # start = [1, 16, 354, 1, 22, 354, 2, 29, 354, 2, 35, 354, 3, 45, 354, 4, 51, 354, 5, 58, 354, 6, 64]
-start = [1, 16, 354, 1, 22, 354, 2, 29, 354, 2, 35, 354, 3, 45, 354, 4, 51, 354, 5, 58, 354, 6, 64, 354, 7, 74, 354, 8, 80,
-    354, 9, 86, 354, 10, 93, 354, 11, 99, 354, 13, 109, 354, 14, 115, 354, 15, 122, 354, 16, 128, 354, 17, 138, 354, 18,
-    144, 354, 19, 150, 354, 20, 157, 354, 21, 163, 354, 22, 173, 354, 23, 179, 354, 24, 186, 354, 25, 192, 354, 25, 198,
-    354, 26, 208, 354, 27, 214, 354, 27, 221, 354, 27, 227, 354, 28, 234, 354, 29, 243, 354, 29, 253, 354, 30, 266, 354,
-    30, 278, 354, 31, 288, 354, 31, 301, 354, 32, 314, 354, 32, 317, 354, 33, 317, 352, 33, 320, 352, 34, 320, 352, 34,
-    320, 352, 35, 320, 352, 35, 320, 352, 36, 320, 352, 36, 320, 352, 36, 320, 352, 37, 320, 352, 37, 320, 352, 38, 320,
-    352, 38, 320, 352, 38, 320, 352, 39, 320, 352, 39, 320, 352, 40, 320, 352, 40, 320, 352, 40, 320, 352, 41, 320, 352,]
+start = [1, 16, 354, 1, 22, 354, 2, 29, 354, 2, 35, 354, 3, 45, 354, 4, 51, 354, 5, 58, 354, 6, 64, 354, 7, 74, 354, 8,
+         80,
+         354, 9, 86, 354, 10, 93, 354, 11, 99, 354, 13, 109, 354, 14, 115, 354, 15, 122, 354, 16, 128, 354, 17, 138,
+         354, 18,
+         144, 354, 19, 150, 354, 20, 157, 354, 21, 163, 354, 22, 173, 354, 23, 179, 354, 24, 186, 354, 25, 192, 354, 25,
+         198,
+         354, 26, 208, 354, 27, 214, 354, 27, 221, 354, 27, 227, 354, 28, 234, 354, 29, 243, 354, 29, 253, 354, 30, 266,
+         354,
+         30, 278, 354, 31, 288, 354, 31, 301, 354, 32, 314, 354, 32, 317, 354, 33, 317, 352, 33, 320, 352, 34, 320, 352,
+         34,
+         320, 352, 35, 320, 352, 35, 320, 352, 36, 320, 352, 36, 320, 352, 36, 320, 352, 37, 320, 352, 37, 320, 352, 38,
+         320,
+         352, 38, 320, 352, 38, 320, 352, 39, 320, 352, 39, 320, 352, 40, 320, 352, 40, 320, 352, 40, 320, 352, 41, 320,
+         352, ]
 # start = [873, 208, 96, 701, 96, 96, 96, 96, 96, 96, 96, 208, 208, 96, 96, 996, 295, 913, 656, 82, 849, 552, 92, 92, 748,
 #          49, 746, 432, 362, 471, 969, 705, 671, 828, 990, 856, 325, 250, 172, 172, 343, 974, 83, 830, 680, 257, 922, 4,
 #          255, 985, 438, 922, 897, 498, 500, 586, 534, 83, 503, 31, 576, 459, 597, 533, 29, 343, 312, 96, 893, 974, 432,
@@ -73,8 +83,10 @@ start = [1, 16, 354, 1, 22, 354, 2, 29, 354, 2, 35, 354, 3, 45, 354, 4, 51, 354,
 #          188, 168, 623, 577, 812, 769, 330, 518, 63, 751, 503, 662, 47, 808, 922, 518, 36, 925, 937, 925, 966, 925, 966,
 #          244, 749, 638, 894, 816, 681, 299, 299, 96, 873, 96, 96, 96, 96, 96, 96, 96, 596, 299, 299, 299]
 # start = [892, 112, 117, 126, 680]  # or "<|endoftext|>" or etc. Can also specify a file, use as: "FILE:prompt.txt"
+raw_data = loadDataFile("data/battery/MIT_lenth.db")
+real = raw_data[-2]
 num_samples = 10  # number of samples to draw
-max_new_tokens = 360000  # number of tokens generated in each sample
+max_new_tokens = 360000 * 3  # number of tokens generated in each sample
 # max_new_tokens = 2250 * 10  # number of tokens generated in each sample
 temperature = 0.8  # 1.0 = no change, < 1.0 = less random, > 1.0 = more random, in predictions
 top_k = 200  # retain only the top_k most likely tokens, clamp others to have 0 probability
@@ -119,10 +131,15 @@ if compile:
 
 # look for the meta pickle in case it is available in the dataset folder
 load_meta = False
+
+
 if init_from == 'resume' and 'config' in checkpoint and 'dataset' in checkpoint[
     'config']:  # older checkpoints might not have these...
     meta_path = os.path.join('data', checkpoint['config']['dataset'], 'meta.pkl')
     load_meta = os.path.exists(meta_path)
+    # print(load_meta)
+# exit() 
+
 if load_meta:
     print(f"Loading meta from {meta_path}...")
     with open(meta_path, 'rb') as f:
@@ -138,23 +155,24 @@ else:
     encode = lambda s: enc.encode(s, allowed_special={"<|endoftext|>"})
     decode = lambda l: enc.decode(l)
 
-# encode the beginning of the prompt
-# if start.startswith('FILE:'):
-#     with open(start[5:], 'r', encoding='utf-8') as f:
-#         start = f.read()
-
-start_ids = encode(start)
-# start_ids = [89, 51]
-x = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
-
 # run generation
 with torch.no_grad():
     with ctx:
-        for k in range(num_samples):
+        for k in range(1, num_samples):
+            # encode the beginning of the prompt
+            # if start.startswith('FILE:'):
+            #     with open(start[5:], 'r', encoding='utf-8') as f:
+            #         start = f.read()
+            cycles = (k + 1)  # * 10
+            start = real[:cycles * 3600]
+            start_ids = encode(start)
+            # start_ids = [89, 51]
+            x = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
             y = model.generate(x, max_new_tokens, temperature=temperature, top_k=top_k)
             decodeMessage = decode(y[0].tolist())
             import pickle
-            file = open(r"samples\list_{}.bin".format(k), "wb")
+
+            file = open(r"samples\list_cycles_2_extra_{}.bin".format(cycles), "wb")
             pickle.dump(decodeMessage, file)  # 保存list到文件
             file.close()
             print(decodeMessage)
