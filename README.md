@@ -33,6 +33,18 @@ Follow these steps to quickly start using the pre-trained `BatteryGPT` model to 
 $ python sample.py
 ```
 
+TODO List
+
+We are actively working on the next updates of this project. The following items will be released in future versions:
+
+* Release the corrected and updated dataset and code to avoid potential misunderstandings caused by earlier synchronized versions.
+* Update the pretrained models with newly organized data and improved training settings.
+* Introduce BatteryGPT v2, which incorporates additional external feature embedding schemes beyond the original V, I, and T signal representations.
+* Improve the embedding strategy for voltage, current, temperature, and other battery-related signals to better capture multi-dimensional battery degradation patterns.
+* Integrate BatteryGPT with BatteryLife for a more complete battery modeling and prediction workflow.
+* Incorporate more battery datasets to support broader cross-dataset evaluation and improve generalization across different battery chemistries, protocols, and operating conditions.
+* Provide clearer documentation, examples, and scripts for data preprocessing, model training, inference, and evaluation.
+
 ## Acknowledgements
 
 This project makes use of code from the [nanoGPT](https://github.com/karpathy/nanoGPT) by [karpathy]. Specifically, we adapted the implementation of GPT model to enhance our application. We appreciate the efforts of the original authors and recommend checking out their work for its robust features and excellent documentation.
