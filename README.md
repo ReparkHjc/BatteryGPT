@@ -33,7 +33,7 @@ Follow these steps to quickly start using the pre-trained `BatteryGPT` model to 
 $ python sample.py
 ```
 
-TODO List
+## TODO List
 
 We are actively working on the next updates of this project. The following items will be released in future versions:
 
